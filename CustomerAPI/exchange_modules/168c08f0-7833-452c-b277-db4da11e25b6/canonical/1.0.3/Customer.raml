@@ -1,0 +1,13 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  physicalPerson: 
+    type: !include PhysicalPerson.raml
+    required: false
+  legalPerson: 
+    type: !include LegalPerson.raml
+    required: false
+  invoices: 
+    type: array 
+    items: !include Invoice.raml
+    required: false

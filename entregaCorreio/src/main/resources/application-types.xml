@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="Correio" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: object
+properties:
+    codigo:
+        type: string
+    CEPDestino:
+        type: string
+    CEPOrigem:
+        type: string
+    channel:
+        type: string          ]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#bc6e7a0a-13e0-4cac-a603-5f785817980d">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="Correio"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

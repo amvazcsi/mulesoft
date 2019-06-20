@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:java="http://www.mulesoft.org/schema/mule/java" xmlns:json="http://www.mulesoft.org/schema/mule/json"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="bea99043-3363-405e-b1cb-e64dde7feb5e" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="c14c12c7-e1c5-4e0a-9091-c6b7c48fde07" >
+		<wsc:connection wsdlLocation="${URL_CORREIO}" service="CalcPrecoPrazoWS" port="CalcPrecoPrazoWSSoap"/>
+	</wsc:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="ea53c4e4-c7b0-4cfb-854c-7550caf40af9" file="entrega.properties" />
+	<flow name="POST:\PrazoFlow" doc:id="6a6bc05d-4cf1-49f6-b7b6-f2e6e47fb578" >
+		<http:listener doc:name="PrazoListener" doc:id="bc6e7a0a-13e0-4cac-a603-5f785817980d" config-ref="HTTP_Listener_config" path="/prazo" outputMimeType="application/json" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Logger" doc:id="1cca9e68-f39a-4e7b-94cd-1b177f45c270" message="${URL_CORREIO}"/>
+		<ee:transform doc:name="Transform Message" doc:id="96c552c5-12b1-4084-8920-548f23656a2c">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://tempuri.org/
+---
+{
+	ns0#CalcPrazo: {
+		ns0#nCdServico: payload.codigo,
+		ns0#sCepOrigem: payload.CEPOrigem,
+		ns0#sCepDestino: payload.CEPDestino
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ca6270da-f9c8-4401-900e-0919aed10a70" message="#[payload]" />
+		<wsc:consume doc:name="Consume" doc:id="8ef5b72c-078f-4eb9-8d29-46bd5b40603c" config-ref="Web_Service_Consumer_Config" operation="CalcPrazo" />
+		<logger level="INFO" doc:name="Logger" doc:id="f592cf2a-a771-4dc4-b92f-2f02b96fa75f" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="f3ebf4cc-d0fa-41d1-9c10-589964e2603a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"codigo":payload.body.CalcPrazoResponse.CalcPrazoResult.Servicos.cServico.Codigo,
+	"prazo": payload.body.CalcPrazoResponse.CalcPrazoResult.Servicos.cServico.PrazoEntrega,
+	"dataMaxEntrega":payload.body.CalcPrazoResponse.CalcPrazoResult.Servicos.cServico.DataMaxEntrega
+	
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="POST:\PrecoFlow" doc:id="150cb2f6-6a55-4eb4-88c8-9f3a18e1dad6" >
+		<http:listener doc:name="Listener" doc:id="ee376f5f-4524-4343-bfa9-3d23a75f6156" config-ref="HTTP_Listener_config" path="/preco" allowedMethods="POST" outputMimeType="application/json">
+		</http:listener>
+		<try doc:name="Try" doc:id="ddfa94dc-c3ae-4ac2-8fcb-114e2a0c2cdb" >
+			<ee:transform doc:name="Transform Message" doc:id="ae30c586-3b79-468e-8390-69bb949f62c8">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://tempuri.org/
+---
+{
+	ns0#CalcPreco: {
+		ns0#nCdEmpresa: null,
+		ns0#sDsSenha: null,
+		ns0#nCdServico: payload.codigoServico,
+		ns0#sCepOrigem: payload.CEPOrigem,
+		ns0#sCepDestino: payload.CEPDestino,
+		ns0#nVlPeso: payload.peso,
+		ns0#nCdFormato: payload.formato,
+		ns0#nVlComprimento: payload.comprimento,
+		ns0#nVlAltura: payload.altura,
+		ns0#nVlLargura: payload.largura,
+		ns0#nVlDiametro: payload.diametro,
+		ns0#sCdMaoPropria: payload.maoPropria,
+		ns0#nVlValorDeclarado: payload.valorDeclarado,
+		ns0#sCdAvisoRecebimento: payload.avisoRecebimento
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="af14450a-eb2b-464d-8c77-5d1a57219da0" message="Passo 1 : #[payload]" />
+			<wsc:consume operation="CalcPreco" doc:name="Consume" doc:id="e0f87ddc-b932-4801-a5d9-9672c48cdc92" config-ref="Web_Service_Consumer_Config">
+				<error-mapping sourceType="WSC:CONNECTIVITY" targetType="APP:99" />
+		</wsc:consume>
+			<logger level="INFO" doc:name="Logger" doc:id="6bc61777-3e55-46f3-bae6-0e15605539b8" message="#[payload]"/>
+			<choice doc:name="Choice" doc:id="21bc103b-2b98-4028-96de-2dbfb51c21f3" >
+				<when expression="#[payload.body.CalcPrecoResponse.CalcPrecoResult.Servicos.cServico.MsgErro != null]">
+					<ee:transform doc:name="Transform Message" doc:id="4805ad7a-731f-415a-a453-305efe68ec45" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"codigo": payload.body.CalcPrecoResponse.CalcPrecoResult.Servicos.cServico.Erro,
+	"message": payload.body.CalcPrecoResponse.CalcPrecoResult.Servicos.cServico.MsgErro
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</when>
+				<otherwise >
+					<ee:transform doc:name="Transform Message" doc:id="1d8e9fc7-9fe7-4d39-ac6c-198519365cca">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"codigoServico": payload.body.CalcPrecoResponse.CalcPrecoResult.Servicos.cServico.Codigo,
+	"valor" : payload.body.CalcPrecoResponse.CalcPrecoResult.Servicos.cServico.Valor,
+	"valorMaoPropria" : payload.body.CalcPrecoResponse.CalcPrecoResult.Servicos.cServico.ValorMaoPropria,
+	"valorAvisoRecebimento": payload.body.CalcPrecoResponse.CalcPrecoResult.Servicos.cServico.ValorAvisoRecebimento,
+	"valorSemAdicionais": payload.body.CalcPrecoResponse.CalcPrecoResult.Servicos.cServico.ValorSemAdicionais
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+				</otherwise>
+			</choice>
+			<error-handler>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c9f9fac1-9873-44da-8c65-7609e32d1d56" type="APP:99">
+					<ee:transform doc:name="Transform Message" doc:id="a1f1e0f6-a45c-4609-982f-572214a281c8" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"message":"Falha ao consumir o serviço do correio"
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-propagate>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e50e613e-55b3-4a7b-825e-82e7d710d6e2" type="WSC:CONNECTIVITY, WSC:SOAP_FAULT">
+					<logger level="INFO" doc:name="Logger" doc:id="faabe640-3d19-4290-baee-11dcd5d6d966" message="Falha 99" />
+					<ee:transform doc:name="Transform Message" doc:id="0ac8e9b7-9401-4e1b-90e1-fe1df4cb7f2d" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+		"message":"Falha ao consumir o serviço do correio"
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+	</flow>
+</mule>

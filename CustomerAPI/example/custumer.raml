@@ -1,0 +1,40 @@
+#%RAML 1.0 NamedExample
+custumer:
+  {
+    "physicalPerson": 
+      {
+          "id": 9999999,
+          "firstName": "Pedro",
+          "lastName": "silva",
+          "phone": "11999999999",
+          "email": "ale@gmail.com",
+          "cpf": "99999999999",
+          "birth": "2015-05-23",
+          "bank": 
+            {
+              "name": "Itau",
+              "agency": 9999,
+              "account": 99999,
+              "digit":  9
+            },
+            "address": {
+              "id": 9999999,
+              "street": "Paulista",
+              "number": "1234",
+              "cep": "99999999",
+              "district": "Bela vista",
+              "state": "São Paulo",
+              "city": "São Paulo",
+            }
+      },
+      "invoice": [{
+        "id": 123123123,
+        "description": "Car Part Purchase",
+        "item": [{
+          "id": 1212312,
+          "description": "Pneu",
+          "amount": 4,
+          "value": 150
+        }]
+      }]
+  }

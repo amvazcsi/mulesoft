@@ -1,0 +1,1 @@
+{"main":"customerapi.raml","name":"CustomerAPI","classifier":"raml","tags":[],"groupId":"168c08f0-7833-452c-b277-db4da11e25b6","backwardsCompatible":false,"assetId":"customerapi","version":"1.0.28","apiVersion":"v1","dependencies":[{"groupId":"168c08f0-7833-452c-b277-db4da11e25b6","assetId":"canonical","version":"1.0.3"}]}

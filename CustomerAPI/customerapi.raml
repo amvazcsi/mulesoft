@@ -1,0 +1,83 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/60d0e792-31ec-4d5b-9d1f-8c2d8ba4732f/ # 
+version: v1
+title: CustomerAPI
+mediaType: [ application/json ]
+
+traits: 
+  security-required: !include traits/security-required.raml
+
+types: 
+  Customer: !include exchange_modules/168c08f0-7833-452c-b277-db4da11e25b6/canonical/1.0.3/Customer.raml
+        
+/customer:
+  is: [security-required]
+  get:
+    displayName: Retrieve list of Custumer
+    description: Return list of customer
+    responses:
+      200:
+        body:
+          type: Customer []
+          example:  [ !include example/custumer.raml ]
+           
+  post:
+    displayName: Create custumer
+    description: Create customer
+    body: 
+       application/json:
+        type: object
+        properties: 
+          customer: 
+            type: Customer
+            required: true 
+    responses:
+      200:
+        body:
+          application/json:
+            examples: !include example/custumer.raml 
+  /{id}:
+    is: [security-required]
+    get:
+      displayName: Retrieve custumer by ID
+      description: Return a customer
+      queryParameters: 
+        firstname:
+          displayName: First name
+          description: First name
+          example: Pedro
+          required: false 
+          type: string
+        cpf: 
+          displayName: CPF
+          description: Number of CPF
+          example: "09876545687"
+          required: false 
+          type: string
+      responses:
+        200:
+          body:
+            type: Customer
+            example: !include example/custumer.raml       
+    put:
+      displayName: Update customer by ID
+      description: Update customer by ID    
+      body:
+        application/json:
+          type: Customer
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Flight updated (but not really)
+      
+    delete:
+      displayName: Delete customer by ID
+      description: Delete customer by ID
+      responses:
+        200:
+          body:
+            application/json:
+              example: { message: Customer delete with sucess !!! }
+      
