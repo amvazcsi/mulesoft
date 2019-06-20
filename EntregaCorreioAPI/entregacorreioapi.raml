@@ -1,0 +1,126 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/97009b87-2209-4b7c-822f-a0fa3ff23a9e/ # 
+title: EntregaCorreioAPI
+version: v1
+mediaType: [ application/json ]
+     
+/preco:
+  post:  
+    description: "Retornar o preço para a entrega"   
+    body: 
+       application/json:
+        type: object
+        properties: 
+          codigoServico:
+            description: Codigo do serviço no correio
+            required: true
+            type: string   
+          CEPOrigem:
+            description: CEP de Origem
+            required: true
+            type: string
+          CEPDestino:
+            description: CEP de destino
+            required: true
+            type: string    
+          peso:
+            description: Peso da encomenda
+            required: true
+            type: string    
+          formato:
+            description: Formato
+            required: true
+            type: string
+          comprimento:
+            description: Comprimento
+            required: true
+            type: string
+          altura:
+            description: Altura em centimetros
+            required: true
+            type: string
+          largura:
+            description: Largura em centimetros
+            required: true
+            type: string
+          diametro:
+            description: Diametro
+            required: true
+            type: string
+          maoPropria:
+            description: Entrega em mãos proprias
+            required: true
+            type: string
+          valorDeclarado:
+            description: Valor declarado da encomenda
+            required: true
+            type: string
+          avisoRecebimento:
+            description: Aviso de recebimento
+            required: true
+            type: string
+                 
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+            properties: 
+              codigoServico:
+                description: Codigo do serviço no correio
+                type: string 
+              valor:
+                description: Valor
+                type: string  
+              valorMaoPropria:
+                description: Valor para ser entregue em mãos proprias
+                type: string 
+              valorAvisoRecebimento:
+                description: Valor para aviso de recebimento
+                type: string
+              valorSemAdicionais:
+                description: Valor sem adicionais
+                type: string
+            example: |
+             {
+                "codigoServico": "40010", "valor": "42,80", "valorMaoPropria": "6,80", "valorAvisoRecebimento": "0,00", "valorSemAdicionais": "36,00"
+             }
+/prazo:
+  post: 
+    description: "Retornar o prazo para a entrega do produto"
+    body:
+      application/json:
+        type: object
+        properties:
+          codigo:
+            description: Codigo do serviço no correios
+            type: string
+            required: true
+          CEPOrigem:
+            description: CEP de origem
+            type: string
+            required: true
+          CEPDestino:
+            description: CEP de destino
+            type: string
+            required: true
+        example:
+          { 
+            "codigo": "40010", "CEPOrigem": "04022002", "CEPDestino": "30575110" 
+          }          
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+            properties:
+              prazo:
+                description: Prazo para a entrega em dias
+                type: string
+              dataMaxEntrega:
+                description: Data maxima para a entrega
+                type: string
+            example:
+              {
+                "prazo": "2", "dataMaxEntrega": "17/06/2019"
+              }
