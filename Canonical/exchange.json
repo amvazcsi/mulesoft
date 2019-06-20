@@ -1,0 +1,13 @@
+{
+	"main": "canonical.raml",
+	"name": "Canonical",
+	"classifier": "raml-fragment",
+	"tags": [
+		"library"
+	],
+	"groupId": "168c08f0-7833-452c-b277-db4da11e25b6",
+	"backwardsCompatible": false,
+	"assetId": "canonical",
+	"version": "1.0.3",
+	"apiVersion": "v1"
+}

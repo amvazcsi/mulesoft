@@ -1,0 +1,12 @@
+#%RAML 1.0 DataType
+type: object
+properties: 
+  id: number
+  firstName: string
+  lastName: string
+  phone: string
+  email: string
+  cpf: string
+  birth: date-only          
+  bank: !include Bank.raml
+  address: !include Address.raml
