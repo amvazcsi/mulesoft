@@ -16,7 +16,8 @@ properties:
   hire_date: 
     type: date-only
     required: false
-  bank: !include Bank.raml
+  bank: 
+    !include Bank.raml
   role: 
     type: array 
     items: !include Role.raml
