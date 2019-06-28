@@ -1,0 +1,21 @@
+#%RAML 1.0
+version: v1
+title: EmployeeAPI
+mediaType: [ application/json ]
+
+traits: 
+  security-required: !include trait/security-required.raml
+
+types: 
+  employee: !include datatype/Employee.raml
+
+/employee:
+  is: [security-required]
+  get:
+    displayName: List of employee
+    description: List of employee and role
+    responses:
+      200:
+        body:
+          type: employee []           
+            

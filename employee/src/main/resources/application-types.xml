@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="Employee" format="json">
+      <types:shape format="weave" example="examples/employee-2.json"><![CDATA[%dw 2.0
+
+type Employee = Array<{|  id: Number {"typeId": "int"},   fistname: String,   lastname: String,   gender: String,   hire_date: String,   bank: {|    name: String,     agency: Number {"typeId": "int"},     account: Number {"typeId": "int"},     digit: Number {"typeId": "int"}  |},   role: {|    id: Number {"typeId": "int"},     role: String  |},   invoice: Array<{|    id: Number {"typeId": "int"},     description: String,     item: Array<{|      id: Number {"typeId": "int"},       description: String,       amount: Number {"typeId": "int"},       value: Number {"typeId": "int"}    |}>
+  |}>
+|}> {"example": "[{\"id\":9999999,\"fistname\":\"Alexandre\",\"lastname\":\"Silva\",\"gender\":\"male\",\"hire_date\":\"1985-05-01\",\"bank\":{\"name\":\"Itau\",\"agency\":9999,\"account\":99999,\"digit\":9},\"role\":{\"id\":123,\"role\":\"Analista\"},\"invoice\":[{\"id\":123123123,\"description\":\"Car Part Purchase\",\"item\":[{\"id\":1212312,\"description\":\"Pneu\",\"amount\":4,\"value\":150}]}]},{\"id\":9999999,\"fistname\":\"Alexandre\",\"lastname\":\"Silva\",\"gender\":\"male\",\"hire_date\":\"1985-05-01\",\"bank\":{\"name\":\"Itau\",\"agency\":9999,\"account\":99999,\"digit\":9},\"role\":{\"id\":123,\"role\":\"Analista\"},\"invoice\":[{\"id\":123123123,\"description\":\"Car Part Purchase\",\"item\":[{\"id\":1212312,\"description\":\"Pneu\",\"amount\":4,\"value\":150}]}]}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#4490ef71-7808-4c47-b7ad-fff75b3e07d1">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Employee"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#6db5aac7-d1ca-438d-a537-8767e2358561">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="Employee"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

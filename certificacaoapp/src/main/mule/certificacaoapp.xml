@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="286b148a-3be6-4d9f-b65e-9ecab88d8f9b" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="3988e5d9-4573-4328-b3b8-bfcaf3e2d749">
+		<vm:queues >
+			<vm:queue queueName="vmconsumermq" queueType="PERSISTENT"/>
+		</vm:queues>
+	</vm:config>
+	<sub-flow name="PayloadSubflow" doc:id="03c5e0ba-ca0a-470e-9760-49d7d894c50a" >
+		<set-payload value="#['OI como você vai']" doc:name="Set Payload" doc:id="d8214528-5a9f-4905-bf26-aa5033c2a26b" mimeType="application/json" />
+		<set-variable value='#["mobile"]' doc:name="Set Variable" doc:id="66bb7f64-c0b6-4660-94f6-077185570de2" variableName="canal" mimeType="application/json" />
+	</sub-flow>
+	<flow name="certificacaoappFlow" doc:id="d335ceee-3af3-4ec1-80cd-944c993b81a6" >
+		<http:listener doc:name="Listener" doc:id="d544a39c-4c35-4e65-810c-1d31c45d0d49" config-ref="HTTP_Listener_config" path="/certificacao" outputMimeType="application/json" allowedMethods="GET">
+			<http:response statusCode="200" reasonPhrase="Sucesso ok" />
+		</http:listener>
+		<flow-ref doc:name="Flow Reference" doc:id="280d42b1-4418-409b-bde6-94c698f20501" name="PayloadSubflow" />
+		<vm:publish doc:name="Publish" doc:id="9d674f04-7ab6-4a4f-864a-b8a5c5c903a2" config-ref="VM_Config" queueName="vmconsumermq" sendCorrelationId="NEVER"/>
+		<flow-ref doc:name="Subflow 2" doc:id="3b7eb18e-d147-4f50-aaf6-b7ed5fbd6d79" name="Subflow_2" />
+	</flow>
+</mule>

@@ -1,0 +1,7 @@
+correio:
+  host: "proxyentregacorreioapi.us-e2.cloudhub.io"
+  port: "80"
+  basepath: "/"
+  protocol: "http"
+  client_id: "123"
+  client_secret: "123" 

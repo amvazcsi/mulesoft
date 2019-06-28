@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="88c29b55-0ad0-4fa8-a1b3-c4013a629114" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="FipeHTTP" doc:name="HTTP Request configuration" doc:id="17662830-480b-46a1-8e74-626fdd173944" >
+		<http:request-connection host="fipeapi.appspot.com" />
+	</http:request-config>
+	<flow name="MarcaFlow" doc:id="b31288d2-53bc-4ad7-bcca-d6c793d0d236" >
+		<http:listener doc:name="MarcasListener" doc:id="e21f5234-a056-4ec9-825c-ee93b5d7a752" config-ref="HTTP_Listener_config" path="/marca" outputMimeType="application/json"/>
+		<http:request method="GET" doc:name="Request" doc:id="f482971d-adc7-4797-b59d-731b152db774" config-ref="FipeHTTP" path="/api/1/carros/marcas.json" outputMimeType="application/json">
+			<http:response-validator >
+				<http:success-status-code-validator values="200" />
+			</http:response-validator>
+		</http:request>
+	</flow>
+	<flow name="veiculoMarcaFlow" doc:id="984285ca-a5d7-446d-a2b0-979703386142" >
+		<http:listener doc:name="VeiculoMarcaListener" doc:id="bc94d767-da83-4a27-86ba-a0c0e2f37f89" config-ref="HTTP_Listener_config" path="/veiculoMarca" outputMimeType="application/json"/>
+		<http:request method="GET" doc:name="Request" doc:id="6696e90e-c9b1-46c6-a819-c80726c5d46f" config-ref="FipeHTTP" path="/api/1/carros/veiculos/{idMarca}.json" outputMimeType="application/json">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"idMarca" : message.attributes.queryParams.idMarca
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+	<flow name="VeiculoFlow" doc:id="45b24aba-1fde-42fe-a416-651ae341e636" >
+		<http:listener doc:name="veiculoListener" doc:id="c502afbd-54f9-4f8b-b705-b8172355ee57" config-ref="HTTP_Listener_config" path="/veiculo"/>
+		<http:request method="GET" doc:name="Request" doc:id="e059585c-06bf-41a5-b01d-cd73651bdbb4" path="/api/1/carros/veiculo/{idMarca}/{idVeiculo}.json" config-ref="FipeHTTP" outputMimeType="application/json">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"idMarca" : message.attributes.queryParams.idMarca,
+	"idVeiculo" : message.attributes.queryParams.idVeiculo
+}]]]></http:uri-params>
+		</http:request>
+	</flow>
+</mule>

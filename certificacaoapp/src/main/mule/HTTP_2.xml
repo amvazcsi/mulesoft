@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:netsuite="http://www.mulesoft.org/schema/mule/netsuite" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<flow name="HTTP_2Flow" doc:id="a685a9d0-6881-433d-aedb-44b95f57269e" >
+		<vm:listener queueName="vmconsumermq" doc:name="Listener" doc:id="8c8e37b3-1999-4b9a-99bc-e9ebd945c959" config-ref="VM_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="dc137c55-c4f7-4298-9810-3e420e9249d9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+	"nome": "Alexandre"		
+},{
+	"nome": "Alice"
+},
+{
+	"nome": "Cecilia"
+}
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="8fa11e04-f754-4cb4-b377-ac67c0cdc2f5" message='#[payload]' category="HTTP_2"/>
+	</flow>
+</mule>

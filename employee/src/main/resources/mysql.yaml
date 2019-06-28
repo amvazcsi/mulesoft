@@ -1,0 +1,6 @@
+db:
+  host: "remotemysql.com"
+  port: "3306"
+  user: "nObKvrrS0Z"
+  password: "xfLmtTtfja"
+  database: "nObKvrrS0Z"

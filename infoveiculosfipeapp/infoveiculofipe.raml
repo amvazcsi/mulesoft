@@ -1,0 +1,60 @@
+#%RAML 1.0
+title: Fipe informations
+version: v1
+
+types:
+  fipe: 
+    type: object
+    properties: 
+      name: string
+      marca: string
+      key: string
+      id: string
+      fipe_name: string
+
+  marca: 
+    type: object
+    properties: 
+      name: string
+      order: string
+      key: string
+      id: string
+      
+/getMarcas:
+  get:  
+    description: "Return a list of the marcas"   
+    responses:
+      200:
+        body:
+          application/json:
+            type: marca
+            example: |
+              {
+                   "name": "AUDI",
+                   "order": "2",
+                   "key": "audi-6",
+                   "id": "6"
+              }
+                        
+/getVeiculo:
+  get:  
+    description: "Return a list of the veicule"
+    queryParameters:
+      idVeiculo:
+        type: string
+      idMarca: 
+        type: string
+    responses:
+      200:
+        body:
+          application/json:
+            type: fipe
+            example: |
+              {
+                   "name": "147 C/ CL",
+                   "marca": "FIAT",
+                   "key": "147-437",
+                   "id": "437",
+                   "fipe_name": "147 C/ CL",
+                  "requestedDate": "2018-12-12"
+              }

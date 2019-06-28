@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:entrega-correio-api="http://www.mulesoft.org/schema/mule/entrega-correio-api"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/entrega-correio-api http://www.mulesoft.org/schema/mule/entrega-correio-api/current/mule-entrega-correio-api.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d970a5c6-d6e1-4253-822d-7b1e7222dca2">
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<entrega-correio-api:config name="EntregaCorreioAPI_Config" doc:name="EntregaCorreioAPI Config" doc:id="7198d6d8-99fe-465d-a788-06e08ce71471" />
+	<configuration-properties doc:name="Configuration properties" doc:id="c93788f9-ad86-4963-9115-afa1db785759" file="config.yaml" />
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="7c294784-6c1b-4f87-a111-56fcad0e80cf" basePath="${correio.basepath}" >
+		<http:request-connection host="${correio.host}" port="${correio.port}" />
+	</http:request-config>
+	<flow name="exemploapicorreioFlow" doc:id="51f7f6f8-d519-410b-93e0-92df9b09664f" >
+		<http:listener doc:name="Listener" doc:id="2afcdc57-466d-4b83-8766-c1ba2e7b184a" config-ref="HTTP_Listener_config" path="/exemploapicorreio"/>
+		<ee:transform doc:name="Transform Message" doc:id="8896425b-a762-4a7e-af37-93b15553d689" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	codigo: "40010",
+	CEPOrigem: "30575110",
+	CEPDestino: "04022002"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="GET" doc:name="Request" doc:id="0c05f1e6-087a-40d1-95fe-e23ec22b977c" config-ref="HTTP_Request_configuration" path="/prazo"/>
+	</flow>
+</mule>

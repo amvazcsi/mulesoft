@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="86d430b5-8779-4904-8e4d-7fedd616399f" />
+	<flow name="childFlowFlow" doc:id="d828d9f9-616d-4205-b7a7-0140c1a646fc" >
+		<logger level="INFO" doc:name="payload" doc:id="9191e5a7-8258-4aef-9abf-7185f0084028" message="#[payload]" category="Payload"/>
+		<logger level="INFO" doc:name="vars" doc:id="44f927a5-3893-4716-af83-91c9f92ccc2f" message="#[vars.varpay]" category="vars"/>
+		<logger level="INFO" doc:name="attributes" doc:id="dd77ff05-f6cc-411f-8021-ef5d3de1b3b6" message="#[attributes]" category="attributes"/>
+		<logger level="INFO" doc:name="server" doc:id="0c54b6fa-e894-42a0-b8fc-3baa484b608a" message="#[server.ip]" category="server"/>
+		<http:request method="GET" doc:name="Request" doc:id="f1869140-5c6a-472a-a10e-63b5af9938c6" config-ref="HTTP_Request_configuration" url="http://localhost:8081/http2" outputMimeType="application/json" responseTimeout="3000" requestStreamingMode="ALWAYS" sendBodyMode="ALWAYS">
+			
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"sobrenome" : "vaz"
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="59f2e538-592c-4937-9059-2d1bbfe6bf19" message="#[attributes]" category="attributes 1"/>
+	</flow>
+</mule>

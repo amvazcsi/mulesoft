@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="listEmployeeFlow" doc:id="4490ef71-7808-4c47-b7ad-fff75b3e07d1" >
+		<db:select doc:name="Select" doc:id="448960a9-9e79-47bd-a86f-05d2c7a562dc" config-ref="Database_MYSQL">
+			<non-repeatable-iterable />
+			<db:sql >select e.no,e.dob,e.first_name,e.last_name,e.gender,e.hire_date,r.id,r.emp_no,r.role 
+from employees e, roles r 
+where e.no = r.emp_no</db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="6db5aac7-d1ca-438d-a537-8767e2358561">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	fistname: payload01.first_name,
+	lastname: payload01.last_name,
+	gender: payload01.gender,
+	role: {
+		id: payload01.id,
+		role: payload01.role default ""
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

@@ -16,8 +16,18 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
 	</wsc:config>
 	<configuration-properties doc:name="Configuration properties" doc:id="ea53c4e4-c7b0-4cfb-854c-7550caf40af9" file="entrega.properties" />
 	<flow name="POST:\PrazoFlow" doc:id="6a6bc05d-4cf1-49f6-b7b6-f2e6e47fb578" >
-		<http:listener doc:name="PrazoListener" doc:id="bc6e7a0a-13e0-4cac-a603-5f785817980d" config-ref="HTTP_Listener_config" path="/prazo" outputMimeType="application/json" allowedMethods="POST"/>
-		<logger level="INFO" doc:name="Logger" doc:id="1cca9e68-f39a-4e7b-94cd-1b177f45c270" message="${URL_CORREIO}"/>
+		<http:listener doc:name="PrazoListener" doc:id="bc6e7a0a-13e0-4cac-a603-5f785817980d" config-ref="HTTP_Listener_config" path="/prazo" outputMimeType="application/json" allowedMethods="POST">
+			<http:response statusCode="200" reasonPhrase="Sucesso ok" >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"canal" : "mobile",
+	"owner" : "Logistica"
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<set-variable value="${URL_CORREIO}" doc:name="Set Variable" doc:id="f53b5717-a474-4220-a20f-625a667ecf25" variableName="url"/>
+		<logger level="INFO" doc:name="Logger" doc:id="1cca9e68-f39a-4e7b-94cd-1b177f45c270" message="#[vars.url]"/>
 		<ee:transform doc:name="Transform Message" doc:id="96c552c5-12b1-4084-8920-548f23656a2c">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
@@ -33,7 +43,7 @@ ns ns0 http://tempuri.org/
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="ca6270da-f9c8-4401-900e-0919aed10a70" message="#[payload]" />
+		<logger level="INFO" doc:name="Logger" doc:id="ca6270da-f9c8-4401-900e-0919aed10a70" message='#[payload]' />
 		<wsc:consume doc:name="Consume" doc:id="8ef5b72c-078f-4eb9-8d29-46bd5b40603c" config-ref="Web_Service_Consumer_Config" operation="CalcPrazo" />
 		<logger level="INFO" doc:name="Logger" doc:id="f592cf2a-a771-4dc4-b92f-2f02b96fa75f" message="#[payload]"/>
 		<ee:transform doc:name="Transform Message" doc:id="f3ebf4cc-d0fa-41d1-9c10-589964e2603a" >

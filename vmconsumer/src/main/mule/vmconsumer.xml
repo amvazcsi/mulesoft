@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="93336362-f94f-4f95-8e03-cd8302783d5d" >
+		<vm:queues >
+			<vm:queue queueName="vmconsumermq" queueType="PERSISTENT"/>
+		</vm:queues>
+	</vm:config>
+	<flow name="vmconsumerFlow" doc:id="9bef28b4-e39f-430f-b6bd-69f74797800b" >
+		<vm:listener doc:name="Listener" doc:id="b720faed-e8b4-4120-b8f2-3a2f8bab1c4b" config-ref="VM_Config" queueName="vmconsumermq"/>
+		<logger level="INFO" doc:name="Logger" doc:id="5151124a-ac0e-426a-a379-550c17b31833" message="#[payload]"/>
+	</flow>
+</mule>

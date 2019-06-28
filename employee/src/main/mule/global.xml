@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	<db:config name="Database_MYSQL" doc:name="Database Config" doc:id="72171f2c-f224-4d65-b022-916ea8cedde9" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${db.user}" password="xfLmtTtfja" database="${db.database}" />
+	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="c6afbbef-11bc-4ae5-9e07-9bd77f9b3b44" file="mysql.yaml" />
+
+</mule>
