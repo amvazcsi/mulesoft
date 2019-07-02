@@ -6,7 +6,7 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<http:request-config name="ViaCEPHTTPRequest" doc:name="HTTP Request configuration" doc:id="f1b7f1b6-8219-48c8-9710-ea58aefb44b7" />
 	<http:listener-config name="HTTP_Listener_CEPAPI" doc:name="HTTP Listener config" doc:id="952c9e62-9c40-4d4d-9216-2205e0896ed4" >
-		<http:listener-connection host="0.0.0.0" port="8081" />
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
 	</http:listener-config>
 	<configuration-properties doc:name="Configuration properties" doc:id="c4c88e43-f9c7-47ca-9f81-0caeae34b6cb" file="config.yaml" />
 </mule>

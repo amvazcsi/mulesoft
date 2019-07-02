@@ -2,7 +2,7 @@
 <mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
     <flow name="get:\(cep):cepapi-config">
-        <http:listener doc:name="Listener" doc:id="b1fe10b9-64f5-4370-94ab-307c6b52003f" outputMimeType="application/json" path="/{cep}" config-ref="HTTP_Listener_CEPAPI">
+        <http:listener doc:name="Listener" doc:id="b1fe10b9-64f5-4370-94ab-307c6b52003f" outputMimeType="application/json" path="/{cep}" config-ref="HTTP_Listener_CEPAPI" allowedMethods="GET">
 			<http:response statusCode="200" reasonPhrase="sucesso" />
 		</http:listener>
 		<logger level="INFO" doc:name="Logger" doc:id="70e5c03d-7413-4294-b5d0-97de99375917" message="#[attributes]"/>

@@ -1,2 +1,5 @@
+http:
+  port: "8081"
+
 viacep:
   URL: "http://viacep.com.br/ws/{cep}/json/" 
