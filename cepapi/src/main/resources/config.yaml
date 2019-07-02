@@ -1,0 +1,2 @@
+viacep:
+  URL: "http://viacep.com.br/ws/{cep}/json/" 

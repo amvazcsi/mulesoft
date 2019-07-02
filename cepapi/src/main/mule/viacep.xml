@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="viacepSub_Flow" doc:id="bea88ce7-323e-4e20-99ec-3455d0633a08" >
+		<http:request method="GET" doc:name="Request" doc:id="1a1c9666-6585-4d4c-befe-2b3582511f29" config-ref="ViaCEPHTTPRequest" url="${viacep.URL}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"cep" : message.attributes.uriParams.cep
+}]]]></http:uri-params>
+		</http:request>
+	</sub-flow>
+</mule>

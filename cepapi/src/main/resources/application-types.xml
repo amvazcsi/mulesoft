@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="cep" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="viacep" format="json">
+      <types:shape format="weave" example="viacep.json"><![CDATA[%dw 2.0
+
+type viacep = {|
+  cep: String, 
+  logradouro: String, 
+  complemento: String, 
+  bairro: String, 
+  localidade: String, 
+  uf: String, 
+  unidade: String, 
+  ibge: String, 
+  gia: String
+|} {"example": "{\"cep\":\"01001-000\",\"logradouro\":\"Pra\u00E7a da S\u00E9\",\"complemento\":\"lado \u00EDmpar\",\"bairro\":\"S\u00E9\",\"localidade\":\"S\u00E3o Paulo\",\"uf\":\"SP\",\"unidade\":\"\",\"ibge\":\"3550308\",\"gia\":\"1004\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#1a1c9666-6585-4d4c-befe-2b3582511f29">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="cep"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="viacep"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

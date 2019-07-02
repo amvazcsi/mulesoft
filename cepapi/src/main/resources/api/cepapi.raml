@@ -1,0 +1,23 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/866e77b7-5b6d-43ac-bab3-08f235493954/ # 
+version: v1
+title: CEPAPI
+mediaType: [ application/json ]
+
+traits: 
+  security-required: !include trait/security-required.raml
+
+types: 
+  address: !include datatype/Address.raml
+
+/{cep}:
+  is: [security-required]
+  get:
+    displayName: Return address by CEP
+    description: Return address by CEP
+    responses:
+      200:
+        body:
+          type: address
+          example:
+            !include example/address.raml
