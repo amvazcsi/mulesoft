@@ -26,4 +26,116 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 		<vm:publish doc:name="Publish" doc:id="9d674f04-7ab6-4a4f-864a-b8a5c5c903a2" config-ref="VM_Config" queueName="vmconsumermq" sendCorrelationId="NEVER"/>
 		<flow-ref doc:name="Subflow 2" doc:id="3b7eb18e-d147-4f50-aaf6-b7ed5fbd6d79" name="Subflow_2" />
 	</flow>
+	<flow name="certificacaoappFlow1" doc:id="19d460a0-76d2-4e80-a8b1-67145ced8bf6" >
+		<http:listener doc:name="Listener" doc:id="cf2aed83-f422-43c2-8b98-66030339627d" config-ref="HTTP_Listener_config" path="/roundrobin"/>
+		<round-robin doc:name="Round Robin" doc:id="c2ef747b-0e10-4fd6-9f0d-aa805d8365f4" >
+			<route >
+				<logger level="INFO" doc:name="Logger" doc:id="df786bf2-d316-47ea-8a62-f79d5b7f3b49" message="#['OP: 1']"/>
+				<ee:transform doc:name="Transform Message" doc:id="0ef06df0-7f7a-48f0-b9f0-6e9b7a847b61" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":'Passo 1'
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+			<route >
+				<logger level="INFO" doc:name="Logger" doc:id="804bc2d0-9f58-4a8a-93dd-e913b6a749f1" message="#['OP: 2']"/>
+				<ee:transform doc:name="Transform Message" doc:id="d46421cd-6405-4c58-8129-e919ef67edff" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"message":'Passo 2'
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+			<route >
+				<logger level="INFO" doc:name="Logger" doc:id="a57f9943-4058-4a5a-937a-790efe026f86" message="#['OP: 3']"/>
+				<ee:transform doc:name="Transform Message" doc:id="08e77d4f-9d27-4e25-b69b-f5738f73f12a" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":'Passo 3'
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+		</round-robin>
+		<logger level="INFO" doc:name="Logger" doc:id="3fb43041-ee16-43d5-a18e-e2e90a154890" message="#['Saída Round Robin']"/>
+	</flow>
+	<flow name="certificacaoappFlow2" doc:id="63fe32c0-38d5-4c79-9e1d-99a4f18ffa90" >
+		<http:listener doc:name="Listener" doc:id="01b430e1-54b1-4f72-92fc-696623eada10" config-ref="HTTP_Listener_config" path="/scatter"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="dca96e4b-617e-4096-935b-d112bd15b0ee" timeout="10" maxConcurrency="3">
+			<route >
+				<logger level="INFO" doc:name="Logger" doc:id="361e4bfe-9a85-4217-9a96-c22acd782333" message="#['Scatter - 1']"/>
+				<ee:transform doc:name="Transform Message" doc:id="2364f01b-715b-441c-a6bd-639d9faa6dab" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"logradouro": 'Marte',
+	"numero": '365'
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+			<route >
+				<logger level="INFO" doc:name="Logger" doc:id="db8e1ed7-f898-44ae-bbb5-4b3b4d6ebc69" message="#['Scatter - 2']"/>
+				<ee:transform doc:name="Transform Message" doc:id="aa290024-3f67-4543-83cf-f02213725dc1" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"logradouro": 'Estadp de israel',
+	"numero": '847'
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+			<route >
+				<logger level="INFO" doc:name="Logger" doc:id="584b45ca-5c39-49ed-8f53-0c31ef6e3bee" message="#['Scatter - 3']"/>
+				<ee:transform doc:name="Transform Message" doc:id="7a98574e-04b3-4eed-aab3-dfa49a0066e3" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"prazo":'2',
+	"data":'15/07/2019'
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="14cd9d53-17df-4631-942f-c9d115e10f90" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"origem": {
+		"logradouro": payload."0".logradouro,
+		"numero": payload."0".numero
+	},
+	"destino": {
+		"logradouro": payload."1".logradouro,
+		"numero": payload."1".numero
+	},
+	"prazo": payload."2".prazo,
+	"data": payload."2".data
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="989caae8-4508-478a-9c2e-a6b3b391a5c0" message="#['Scatter - Saída']"/>
+	</flow>
 </mule>
